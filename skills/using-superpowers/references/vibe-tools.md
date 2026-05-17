@@ -20,16 +20,20 @@ Skills use Claude Code tool names. When you encounter these in a skill, use your
 
 ## Subagent support
 
-Mistral Vibe supports subagent dispatch via the `task` tool. Available subagent types:
+Mistral Vibe supports subagent dispatch via the `task` tool. Subagent configurations are defined in `mistral-vibe/agents/` as TOML files with `agent_type = "subagent"`. Only SUBAGENT types can be dispatched via `task`; built-in AGENT types (`default`, `accept-edits`, `auto-approve`, `plan`, `chat`, `lean`) cannot.
 
-| Agent | Purpose |
-|-------|---------|
-| `explore` | Read-only codebase exploration (default) |
-| `default` | General-purpose with approval gates |
-| `accept-edits` | Auto-approves file modifications |
-| `auto-approve` | Approves all actions without confirmation |
+### Superpowers Subagents (Dispatchable via `task`)
 
-When a skill dispatches a named agent (e.g., `superpowers:code-reviewer`), use the `task` tool with the `default` agent and include the agent's prompt content from `agents/code-reviewer.md` in the task description.
+| Skill reference | Mistral Vibe agent | Purpose | Enabled tools |
+|-----------------|--------------------|---------|---------------|
+| `superpowers:explore` | `explore` (built-in) | Read-only codebase exploration | `grep`, `read_file` |
+| `superpowers:implementer` | `implementer` | Implements tasks with isolated context | `grep`, `read_file`, `write_file` |
+| `superpowers:spec-reviewer` | `spec-reviewer` | Spec compliance review | `grep`, `read_file` |
+| `superpowers:code-quality-reviewer` | `code-quality-reviewer` | Code quality review | `grep`, `read_file` |
+| `superpowers:code-reviewer` | `code-reviewer` | Final code review against requirements | `grep`, `read_file` |
+| `superpowers:spec-document-reviewer` | `spec-document-reviewer` | Specification document review | `read_file` |
+
+When a skill dispatches a named subagent, use the `task` tool with the corresponding agent name and include the prompt content from the skill's prompt template (e.g., `subagent-driven-development/implementer-prompt.md`).
 
 ## Additional Mistral Vibe tools
 
